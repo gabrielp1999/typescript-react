@@ -1,34 +1,122 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
 import './App.css'
 
+type TypographyProps = {
+  children: React.ReactNode;
+  size?: "small" | "large";
+};
+
+type ParagraphProps = {
+  color: string;
+};
+
+const Paragraph = ({
+  children,
+  size,
+  color,
+}: TypographyProps & ParagraphProps) => {
+  return (
+    <h1
+      style={{
+        fontSize: size === "small" ? "1.5rem" : "3rem",
+        color: color,
+      }}
+    >
+      {children}
+    </h1>
+  );
+};
+
+const Title = ({ children, size }: TypographyProps) => {
+  return (
+    <h1
+      style={{
+        fontSize: size === "small" ? "1.5rem" : "3rem",
+      }}
+    >
+      {children}
+    </h1>
+  );
+};
+
+const titleDefaultProps = {
+  size: "small",
+};
+
+Title.defaultProps = titleDefaultProps;
+
+const user = {
+  id: 1,
+  name: "Gabriel",
+  age: 22,
+  isAdmin: true,
+  birthDate: new Date("1999-10-26"),
+};
+
+type UserAttributes = typeof user;
+
+function sumNumbers(a: number, b: number) {
+  return a + b;
+}
+
+function List<ItemType>({
+  items,
+  render,
+}: {
+  items: ItemType[];
+  render: (item: ItemType, index: number) => React.ReactNode;
+}) {
+  return (
+    <ul>
+      {items.map((item, index) => {
+        return render(item, index);
+      })}
+    </ul>
+  );
+}
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState<number | null>(null);
+
+  if (count !== null) {
+    return <div>{count}</div>;
+  }
+
+  const items = [
+    {
+      id: 1,
+      name: "Gabriel",
+    },
+    {
+      id: 3,
+      name: "Ana",
+    },
+  ];
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Title>
+        <span>
+          Hello <b>World</b>
+        </span>
+      </Title>
+
+      <Paragraph color="red" size="small">
+        Eu sou um parágrafo
+      </Paragraph>
+
+      <List
+        items={items}
+        render={(item, index) => {
+          if (item.id === 1) {
+            return <p>{item.name}</p>;
+          }
+
+          return <h3>{item.name}</h3>;
+        }}
+      />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
